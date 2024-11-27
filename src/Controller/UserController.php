@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class UserController extends AbstractController
 {
@@ -22,12 +23,14 @@ class UserController extends AbstractController
 
 
     #[Route('/users', name: 'user_list')]
+    #[IsGranted('ROLE_ADMIN')]
     public function listAction()
     {
         return $this->render('user/list.html.twig', ['users' => $this->entityManager->getRepository(User::class)->findAll()]);
     }
 
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/users/create', name: 'user_create')]
     public function createAction(Request $request)
     {
@@ -35,9 +38,6 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $this->userPasswordHasher->hashPassword($user, $user->getPassword());
@@ -56,6 +56,7 @@ class UserController extends AbstractController
     }
 
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/users/{id}/edit', name: 'user_edit')]
     public function editAction(User $user, Request $request)
     {
