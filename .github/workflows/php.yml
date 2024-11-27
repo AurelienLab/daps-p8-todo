@@ -34,6 +34,7 @@ jobs:
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md
-
+    - name: Init test db
+      run: php bin/console doctrine:database:create --env=test && doctrine:schema:update --force --env=test
     - name: Run test suite
       run: php bin/phpunit
