@@ -1,0 +1,8 @@
+App\Entity\Task:
+  task_undone:
+    title: Test Task Undone
+    content: A test Task
+  task_done:
+    title: Test Task Done
+    content: A test Task Undone
+    is_done: true

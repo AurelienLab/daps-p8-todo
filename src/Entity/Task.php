@@ -80,6 +80,12 @@ class Task
     }
 
 
+    public function setIsDone(bool $isDone): void
+    {
+        $this->isDone = $isDone;
+    }
+
+
     public function isDone()
     {
         return $this->isDone;
