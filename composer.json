@@ -3,6 +3,8 @@
     "license": "proprietary",
     "minimum-stability": "stable",
     "prefer-stable": true,
+    "name": "aurelienlab/todoandco",
+    "description": "Project 8 of php / symfony course of OpenClassrooms",
     "require": {
         "php": ">=8.2",
         "ext-ctype": "*",
