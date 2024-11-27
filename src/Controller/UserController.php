@@ -12,11 +12,12 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class UserController extends AbstractController
 {
+
+
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
+        private readonly EntityManagerInterface      $entityManager,
         private readonly UserPasswordHasherInterface $userPasswordHasher
-    )
-    {
+    ) {
     }
 
 
@@ -26,6 +27,7 @@ class UserController extends AbstractController
         return $this->render('user/list.html.twig', ['users' => $this->entityManager->getRepository(User::class)->findAll()]);
     }
 
+
     #[Route('/users/create', name: 'user_create')]
     public function createAction(Request $request)
     {
@@ -34,9 +36,13 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
 
+        if ($form->isSubmitted()) {
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $this->userPasswordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
+            $user->setRoles([$form->get('roles')->getData()]);
 
             $this->entityManager->persist($user);
             $this->entityManager->flush();
@@ -49,6 +55,7 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
+
     #[Route('/users/{id}/edit', name: 'user_edit')]
     public function editAction(User $user, Request $request)
     {
@@ -59,6 +66,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $this->userPasswordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
+            $user->setRoles([$form->get('roles')->getData()]);
 
             $this->entityManager->flush();
 
@@ -69,4 +77,6 @@ class UserController extends AbstractController
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
     }
+
+
 }

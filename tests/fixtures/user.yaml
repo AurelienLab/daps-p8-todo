@@ -2,4 +2,5 @@ App\Entity\User:
   user_user:
     username: john
     email: john@doe.com
+    roles: [ROLE_USER]
     password: "\\$2a\\$10\\$townlpyCnJGhTHrFSY7SweKR8VSKxwURU0U0c6QDu2bliuAV2IEti" #azerty123

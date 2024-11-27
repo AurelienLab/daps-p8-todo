@@ -3,6 +3,7 @@
 namespace App\Tests\Controller;
 
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+use http\Exception\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,6 +53,7 @@ class UserControllerTest extends WebTestCase
                 'user[username]' => 'Test',
                 'user[password][first]' => 'azerty123',
                 'user[password][second]' => 'azerty123',
+                'user[roles]' => 'ROLE_USER',
                 'user[email]' => 'test@test.com',
             ]
         );
@@ -77,6 +79,7 @@ class UserControllerTest extends WebTestCase
                 'user[username]' => 'john',
                 'user[password][first]' => '123456',
                 'user[password][second]' => '123456',
+                'user[roles]' => 'ROLE_USER',
                 'user[email]' => 'john@test.com',
             ]
         );
@@ -98,6 +101,7 @@ class UserControllerTest extends WebTestCase
                 'user[username]' => 'Michel',
                 'user[password][first]' => '123456',
                 'user[password][second]' => '123456',
+                'user[roles]' => 'ROLE_USER',
                 'user[email]' => 'john@doe.com',
             ]
         );

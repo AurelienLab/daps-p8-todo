@@ -21,38 +21,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private int $id;
 
     #[ORM\Column(type: 'string', length: 25, unique: true)]
-    private $username;
+    private string $username;
+
+    #[ORM\Column(type: 'json')]
+//    #[Assert\NotBlank]
+//    #[Assert\NotNull]
+    private ?array $roles = [];
 
     #[ORM\Column(type: 'string', length: 64)]
-    private $password;
+    private string $password;
 
     #[ORM\Column(type: 'string', length: 60, unique: true)]
     #[Assert\NotBlank(message: "Vous devez saisir une adresse email.")]
     #[Assert\Email(message: "Le format de l'adresse n'est pas correcte.")]
-    private $email;
+    private string $email;
 
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
 
-    public function setUsername($username)
+    public function setUsername($username): self
     {
         $this->username = $username;
-    }
-
-
-    public function getSalt()
-    {
-        return null;
+        return $this;
     }
 
 
@@ -62,27 +62,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
-    public function setPassword($password)
+    public function setPassword($password): self
     {
         $this->password = $password;
+
+        return $this;
     }
 
 
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
 
-    public function setEmail($email)
+    public function setEmail($email): self
     {
         $this->email = $email;
+
+        return $this;
     }
 
 
     public function getRoles(): array
     {
-        return array('ROLE_USER');
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
 
