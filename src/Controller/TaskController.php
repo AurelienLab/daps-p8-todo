@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TaskController extends AbstractController
 {
@@ -27,6 +28,7 @@ class TaskController extends AbstractController
 
 
     #[Route('/task/create', name: 'task_create')]
+    #[IsGranted('ROLE_USER')]
     public function createAction(Request $request)
     {
         $task = new Task();
@@ -36,7 +38,7 @@ class TaskController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $task->setAuthor($this->getUser());
-            
+
             $this->entityManager->persist($task);
             $this->entityManager->flush();
 
