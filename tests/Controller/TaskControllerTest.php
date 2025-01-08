@@ -270,4 +270,126 @@ class TaskControllerTest extends WebTestCase
     }
 
 
+    public function testEditTaskUnauthenticated()
+    {
+        $taskRepository = $this->getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->findOneBy([]);
+
+        $url = $this->router->generate('task_edit', ['id' => $task->getId()]);
+        $this->client->request(Request::METHOD_GET, $url);
+        $this->client->followRedirect();
+        $this->assertRouteSame('login');
+    }
+
+
+    public function testEditAnonymousTaskByUser()
+    {
+        $user = $this->userRepository->findOneByEmail('john@doe.com');
+        $this->client->loginUser($user);
+
+        $taskRepository = $this->getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->findOneBy(['author' => null]);
+
+        $url = $this->router->generate('task_edit', ['id' => $task->getId()]);
+        $this->client->request(Request::METHOD_GET, $url);
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
+
+
+    public function testEditAnonymousTaskByAdmin()
+    {
+        $admin = $this->userRepository->findOneByEmail('admin@doe.com');
+        $this->client->loginUser($admin);
+
+        $taskRepository = $this->getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->findOneBy(['author' => null]);
+
+        $url = $this->router->generate('task_edit', ['id' => $task->getId()]);
+        $crawler = $this->client->request(Request::METHOD_GET, $url);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+
+        $form = $crawler->selectButton('Modifier')->form(
+            [
+                'task[title]' => 'Test Task update',
+                'task[content]' => 'Test Task update content',
+            ]
+        );
+        $this->client->submit($form);
+
+        $this->client->followRedirect();
+        $this->assertRouteSame('task_list');
+        $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche a bien été modifiée.');
+    }
+
+
+    public function testEditUserTaskByAdmin()
+    {
+        $user = $this->userRepository->findOneByEmail('john@doe.com');
+
+        $admin = $this->userRepository->findOneByEmail('admin@doe.com');
+        $this->client->loginUser($admin);
+
+        $taskRepository = $this->getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->findOneBy(['author' => $user]);
+
+        $url = $this->router->generate('task_edit', ['id' => $task->getId()]);
+        $crawler = $this->client->request(Request::METHOD_GET, $url);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+
+        $form = $crawler->selectButton('Modifier')->form(
+            [
+                'task[title]' => 'Test Task update',
+                'task[content]' => 'Test Task update content',
+            ]
+        );
+        $this->client->submit($form);
+
+        $this->client->followRedirect();
+        $this->assertRouteSame('task_list');
+        $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche a bien été modifiée.');
+    }
+
+
+    public function testEditUserTaskByAuthor()
+    {
+        $user = $this->userRepository->findOneByEmail('john@doe.com');
+        $this->client->loginUser($user);
+
+        $taskRepository = $this->getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->findOneBy(['author' => $user]);
+
+        $url = $this->router->generate('task_edit', ['id' => $task->getId()]);
+        $crawler = $this->client->request(Request::METHOD_GET, $url);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+
+        $form = $crawler->selectButton('Modifier')->form(
+            [
+                'task[title]' => 'Test Task update',
+                'task[content]' => 'Test Task update content',
+            ]
+        );
+        $this->client->submit($form);
+
+        $this->client->followRedirect();
+        $this->assertRouteSame('task_list');
+        $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche a bien été modifiée.');
+    }
+
+
+    public function testEditUserTaskByOtherUser()
+    {
+        $user1 = $this->userRepository->findOneByEmail('john@doe.com');
+
+        $user2 = $this->userRepository->findOneByEmail('franck@doe.com');
+        $this->client->loginUser($user2);
+
+        $taskRepository = $this->getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->findOneBy(['author' => $user1]);
+
+        $url = $this->router->generate('task_edit', ['id' => $task->getId()]);
+        $this->client->request(Request::METHOD_GET, $url);
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
+
+
 }
