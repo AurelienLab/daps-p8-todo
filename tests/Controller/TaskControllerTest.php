@@ -139,8 +139,24 @@ class TaskControllerTest extends WebTestCase
     }
 
 
+    public function testMarkTaskDoneUnauthenticated()
+    {
+        $url = $this->router->generate('task_list');
+        $crawler = $this->client->request(Request::METHOD_GET, $url);
+
+        $form = $crawler->selectButton('Marquer comme faite')->form();
+
+        $this->client->submit($form);
+        $this->assertResponseRedirects();
+        $this->client->followRedirect();
+        $this->assertRouteSame('login');
+    }
+
+
     public function testMarkTaskDone()
     {
+        $user = $this->userRepository->findOneByEmail('john@doe.com');
+        $this->client->loginUser($user);
 
         $url = $this->router->generate('task_list');
         $crawler = $this->client->request(Request::METHOD_GET, $url);
@@ -157,8 +173,24 @@ class TaskControllerTest extends WebTestCase
     }
 
 
+    public function testMarkTaskUndoneUnauthenticated()
+    {
+        $url = $this->router->generate('task_list');
+        $crawler = $this->client->request(Request::METHOD_GET, $url);
+
+        $form = $crawler->selectButton('Marquer non terminée')->form();
+
+        $this->client->submit($form);
+        $this->assertResponseRedirects();
+        $this->client->followRedirect();
+        $this->assertRouteSame('login');
+    }
+
+
     public function testMarkTaskUndone()
     {
+        $user = $this->userRepository->findOneByEmail('john@doe.com');
+        $this->client->loginUser($user);
 
         $url = $this->router->generate('task_list');
         $crawler = $this->client->request(Request::METHOD_GET, $url);
