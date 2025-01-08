@@ -6,3 +6,7 @@ App\Entity\Task:
     title: Test Task Done
     content: A test Task Undone
     is_done: true
+  task_with_author:
+    title: User Task
+    content: A task related to a user
+    author: '@user_user'
