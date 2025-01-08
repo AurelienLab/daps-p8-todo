@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TaskController extends AbstractController
 {
@@ -27,6 +28,7 @@ class TaskController extends AbstractController
 
 
     #[Route('/task/create', name: 'task_create')]
+    #[IsGranted('ROLE_USER')]
     public function createAction(Request $request)
     {
         $task = new Task();
@@ -35,6 +37,8 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $task->setAuthor($this->getUser());
+
             $this->entityManager->persist($task);
             $this->entityManager->flush();
 
@@ -50,6 +54,7 @@ class TaskController extends AbstractController
     #[Route('/tasks/{id}/edit', name: 'task_edit')]
     public function editAction(Task $task, Request $request)
     {
+        $this->denyAccessUnlessGranted('TASK_EDIT', $task);
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
@@ -72,6 +77,7 @@ class TaskController extends AbstractController
 
 
     #[Route('/tasks/{id}/toggle', name: 'task_toggle')]
+    #[IsGranted('ROLE_USER')]
     public function toggleTaskAction(Task $task)
     {
         $task->toggle(!$task->isDone());
@@ -86,6 +92,8 @@ class TaskController extends AbstractController
     #[Route('/tasks/{id}/delete', name: 'task_delete')]
     public function deleteTaskAction(Task $task)
     {
+        $this->denyAccessUnlessGranted('TASK_DELETE', $task);
+
         $this->entityManager->remove($task);
         $this->entityManager->flush();
 

@@ -2,7 +2,9 @@
 
 namespace App\Tests\Controller;
 
+use App\Repository\UserRepository;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+use http\Exception\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +17,7 @@ class UserControllerTest extends WebTestCase
     use RefreshDatabaseTrait;
 
     private KernelBrowser $client;
+    private UserRepository $userRepository;
     private null|object $router;
 
 
@@ -22,27 +25,53 @@ class UserControllerTest extends WebTestCase
     {
         $this->client = static::createClient();
         $this->router = static::$kernel->getContainer()->get('router');
+        $this->userRepository = $this->getContainer()->get(UserRepository::class);
     }
 
 
-    public function testListUserPage()
+    public function testListUserPageUnauthenticated()
     {
+        $url = $this->router->generate('user_list');
+        $this->client->request(Request::METHOD_GET, $url);
+        $this->assertResponseRedirects('/login');
+    }
+
+
+    public function testListUserPageAuthenticated()
+    {
+        $admin = $this->userRepository->findOneByEmail('admin@doe.com');
+        $this->client->loginUser($admin);
+
         $url = $this->router->generate('user_list');
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
 
-    public function testCreateUserPage()
+    public function testCreateUserPageUnauthenticated(): void
     {
         $url = $this->router->generate('user_create');
         $this->client->request(Request::METHOD_GET, $url);
-        $this->assertResponseStatusCodeSame(200);
+        $this->assertResponseRedirects('/login');
+    }
+
+
+    public function testCreateUserPageAuthenticated(): void
+    {
+        $admin = $this->userRepository->findOneByEmail('admin@doe.com');
+        $this->client->loginUser($admin);
+
+        $url = $this->router->generate('user_create');
+        $this->client->request(Request::METHOD_GET, $url);
+        $this->assertResponseIsSuccessful();
     }
 
 
     public function testCreateUser()
     {
+        $admin = $this->userRepository->findOneByEmail('admin@doe.com');
+        $this->client->loginUser($admin);
+
         $url = $this->router->generate('user_create');
         $crawler = $this->client->request(Request::METHOD_GET, $url);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -52,6 +81,7 @@ class UserControllerTest extends WebTestCase
                 'user[username]' => 'Test',
                 'user[password][first]' => 'azerty123',
                 'user[password][second]' => 'azerty123',
+                'user[roles]' => 'ROLE_USER',
                 'user[email]' => 'test@test.com',
             ]
         );
@@ -67,6 +97,8 @@ class UserControllerTest extends WebTestCase
 
     public function testCreateUserUsernameExists()
     {
+        $admin = $this->userRepository->findOneByEmail('admin@doe.com');
+        $this->client->loginUser($admin);
 
         $url = $this->router->generate('user_create');
         $crawler = $this->client->request(Request::METHOD_GET, $url);
@@ -77,6 +109,7 @@ class UserControllerTest extends WebTestCase
                 'user[username]' => 'john',
                 'user[password][first]' => '123456',
                 'user[password][second]' => '123456',
+                'user[roles]' => 'ROLE_USER',
                 'user[email]' => 'john@test.com',
             ]
         );
@@ -88,6 +121,8 @@ class UserControllerTest extends WebTestCase
 
     public function testCreateUserEmailExists()
     {
+        $admin = $this->userRepository->findOneByEmail('admin@doe.com');
+        $this->client->loginUser($admin);
 
         $url = $this->router->generate('user_create');
         $crawler = $this->client->request(Request::METHOD_GET, $url);
@@ -98,6 +133,7 @@ class UserControllerTest extends WebTestCase
                 'user[username]' => 'Michel',
                 'user[password][first]' => '123456',
                 'user[password][second]' => '123456',
+                'user[roles]' => 'ROLE_USER',
                 'user[email]' => 'john@doe.com',
             ]
         );
