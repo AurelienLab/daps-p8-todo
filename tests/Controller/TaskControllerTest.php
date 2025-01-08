@@ -41,20 +41,36 @@ class TaskControllerTest extends WebTestCase
     {
         $url = $this->router->generate('task_list');
         $this->client->request(Request::METHOD_GET, $url);
-        $this->assertSelectorTextContains('.thumbnail a', 'Test Task Undone');
+        $this->assertSelectorTextContains('.thumbnail', 'Test Task Undone');
     }
 
 
     public function testCreateTaskPage()
     {
+        $user = $this->userRepository->findOneByEmail('john@doe.com');
+        $this->client->loginUser($user);
+
         $url = $this->router->generate('task_create');
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
 
+    public function testCreateTaskUnauthenticated()
+    {
+        $url = $this->router->generate('task_create');
+        $this->client->request(Request::METHOD_GET, $url);
+        $this->assertResponseRedirects();
+        $this->client->followRedirect();
+        $this->assertRouteSame('login');
+    }
+
+
     public function testCreateTask()
     {
+        $user = $this->userRepository->findOneByEmail('john@doe.com');
+        $this->client->loginUser($user);
+
         $url = $this->router->generate('task_create');
         $crawler = $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
@@ -73,11 +89,18 @@ class TaskControllerTest extends WebTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche a été bien été ajoutée.');
         $this->assertCount(4, $crawler->filter('.thumbnail'));
+
+        $taskRepository = $this->getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->findOneBy(['title' => 'New Task']);
+        $this->assertNotNull($task);
+        $this->assertEquals($task->getAuthor()->getId(), $user->getId());
     }
 
 
     public function testCreateTaskEmptyTitle()
     {
+        $user = $this->userRepository->findOneByEmail('john@doe.com');
+        $this->client->loginUser($user);
 
         $url = $this->router->generate('task_create');
         $crawler = $this->client->request(Request::METHOD_GET, $url);
@@ -97,6 +120,8 @@ class TaskControllerTest extends WebTestCase
 
     public function testCreateTaskEmptyContent()
     {
+        $user = $this->userRepository->findOneByEmail('john@doe.com');
+        $this->client->loginUser($user);
 
         $url = $this->router->generate('task_create');
         $crawler = $this->client->request(Request::METHOD_GET, $url);
@@ -148,22 +173,6 @@ class TaskControllerTest extends WebTestCase
         $this->assertCount(0, $crawler->filter('.glyphicon-ok'));
         $this->assertCount(3, $crawler->filter('.glyphicon-remove'));
     }
-
-
-//    public function testDeleteTask()
-//    {
-//        $url = $this->router->generate('task_list');
-//        $crawler = $this->client->request(Request::METHOD_GET, $url);
-//        $this->assertCount(3, $crawler->filter('.thumbnail'));
-//
-//        $form = $crawler->selectButton('Supprimer')->form();
-//        $this->client->submit($form);
-//        $this->assertResponseRedirects();
-//        $crawler = $this->client->followRedirect();
-//
-//        $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche a bien été supprimée.');
-//        $this->assertCount(1, $crawler->filter('.glyphicon-ok'));
-//    }
 
 
     public function testDeleteTaskUnauthenticated()
