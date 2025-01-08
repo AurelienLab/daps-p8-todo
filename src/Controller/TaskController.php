@@ -77,6 +77,7 @@ class TaskController extends AbstractController
 
 
     #[Route('/tasks/{id}/toggle', name: 'task_toggle')]
+    #[IsGranted('ROLE_USER')]
     public function toggleTaskAction(Task $task)
     {
         $task->toggle(!$task->isDone());
@@ -93,8 +94,8 @@ class TaskController extends AbstractController
     {
         $this->denyAccessUnlessGranted('TASK_DELETE', $task);
 
-//        $this->entityManager->remove($task);
-//        $this->entityManager->flush();
+        $this->entityManager->remove($task);
+        $this->entityManager->flush();
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 
