@@ -2,6 +2,8 @@
 
 namespace App\Tests\Controller;
 
+use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -23,6 +25,7 @@ class TaskControllerTest extends WebTestCase
     {
         $this->client = static::createClient();
         $this->router = static::$kernel->getContainer()->get('router');
+        $this->userRepository = $this->getContainer()->get(UserRepository::class);
     }
 
 
@@ -69,7 +72,7 @@ class TaskControllerTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche a été bien été ajoutée.');
-        $this->assertCount(3, $crawler->filter('.thumbnail'));
+        $this->assertCount(4, $crawler->filter('.thumbnail'));
     }
 
 
@@ -125,7 +128,7 @@ class TaskControllerTest extends WebTestCase
 
         $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche Test Task Undone a bien été marquée comme faite.');
         $this->assertCount(2, $crawler->filter('.glyphicon-ok'));
-        $this->assertCount(0, $crawler->filter('.glyphicon-remove'));
+        $this->assertCount(1, $crawler->filter('.glyphicon-remove'));
     }
 
 
@@ -143,23 +146,127 @@ class TaskControllerTest extends WebTestCase
 
         $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche Test Task Done a bien été marquée comme faite.');
         $this->assertCount(0, $crawler->filter('.glyphicon-ok'));
-        $this->assertCount(2, $crawler->filter('.glyphicon-remove'));
+        $this->assertCount(3, $crawler->filter('.glyphicon-remove'));
     }
 
 
-    public function testDeleteTask()
+//    public function testDeleteTask()
+//    {
+//        $url = $this->router->generate('task_list');
+//        $crawler = $this->client->request(Request::METHOD_GET, $url);
+//        $this->assertCount(3, $crawler->filter('.thumbnail'));
+//
+//        $form = $crawler->selectButton('Supprimer')->form();
+//        $this->client->submit($form);
+//        $this->assertResponseRedirects();
+//        $crawler = $this->client->followRedirect();
+//
+//        $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche a bien été supprimée.');
+//        $this->assertCount(1, $crawler->filter('.glyphicon-ok'));
+//    }
+
+
+    public function testDeleteTaskUnauthenticated()
     {
         $url = $this->router->generate('task_list');
-        $crawler = $this->client->request(Request::METHOD_GET, $url);
-        $this->assertCount(2, $crawler->filter('.thumbnail'));
+        $this->client->request(Request::METHOD_GET, $url);
 
-        $form = $crawler->selectButton('Supprimer')->form();
-        $this->client->submit($form);
-        $this->assertResponseRedirects();
-        $crawler = $this->client->followRedirect();
+        $this->assertSelectorNotExists('form > button.btn.btn-danger');
 
-        $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche a bien été supprimée.');
-        $this->assertCount(1, $crawler->filter('.glyphicon-ok'));
+        $taskRepository = $this->getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->findOneBy([]);
+
+        $urlDelete = $this->router->generate('task_delete', ['id' => $task->getId()]);
+        $this->client->request(Request::METHOD_GET, $urlDelete);
+        $this->client->followRedirect();
+        $this->assertRouteSame('login');
+
+    }
+
+
+    public function testDeleteAnonymousTaskByUser()
+    {
+        $user = $this->userRepository->findOneByEmail('john@doe.com');
+        $this->client->loginUser($user);
+
+        $url = $this->router->generate('task_list');
+        $this->client->request(Request::METHOD_GET, $url);
+
+        $this->assertSelectorCount(1, 'form > button.btn.btn-danger');
+
+        $taskRepository = $this->getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->findOneBy(['author' => null]);
+
+        $urlDelete = $this->router->generate('task_delete', ['id' => $task->getId()]);
+        $this->client->request(Request::METHOD_GET, $urlDelete);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+
+    }
+
+
+    public function testDeleteAnonymousTaskByAdmin()
+    {
+        $admin = $this->userRepository->findOneByEmail('admin@doe.com');
+        $this->client->loginUser($admin);
+
+        $url = $this->router->generate('task_list');
+        $this->client->request(Request::METHOD_GET, $url);
+
+        $this->assertSelectorCount(3, 'form > button.btn.btn-danger');
+
+        $taskRepository = $this->getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->findOneBy(['author' => null]);
+
+        $urlDelete = $this->router->generate('task_delete', ['id' => $task->getId()]);
+        $this->client->request(Request::METHOD_GET, $urlDelete);
+
+        $this->client->followRedirect();
+        $this->assertRouteSame('task_list');
+
+    }
+
+
+    public function testDeleteTaskByAuthor()
+    {
+        $user = $this->userRepository->findOneByEmail('john@doe.com');
+        $this->client->loginUser($user);
+
+        $url = $this->router->generate('task_list');
+        $this->client->request(Request::METHOD_GET, $url);
+        $this->assertSelectorCount(1, 'form > button.btn.btn-danger');
+
+        $taskRepository = $this->getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->findOneBy(['author' => $user]);
+
+        $urlDelete = $this->router->generate('task_delete', ['id' => $task->getId()]);
+        $this->client->request(Request::METHOD_GET, $urlDelete);
+
+        $this->client->followRedirect();
+        $this->assertRouteSame('task_list');
+
+    }
+
+
+    public function testDeleteTaskByOtherUser()
+    {
+        $user2 = $this->userRepository->findOneByEmail('franck@doe.com');
+        $this->client->loginUser($user2);
+
+        $user = $this->userRepository->findOneByEmail('john@doe.com');
+
+        $url = $this->router->generate('task_list');
+        $this->client->request(Request::METHOD_GET, $url);
+        $this->assertSelectorCount(0, 'form > button.btn.btn-danger');
+
+        $taskRepository = $this->getContainer()->get(TaskRepository::class);
+        $task = $taskRepository->findOneBy(['author' => $user]);
+
+        $urlDelete = $this->router->generate('task_delete', ['id' => $task->getId()]);
+        $this->client->request(Request::METHOD_GET, $urlDelete);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+
     }
 
 
