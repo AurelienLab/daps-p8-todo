@@ -2,5 +2,23 @@
 @import "shop-homepage.css";
 
 body {
-    background-color: skyblue;
+    background-color: #ffffff;
+}
+
+a {
+    text-decoration: none;
+    color: #0c77bd;
+    &:hover {
+        color: #095685;
+    }
+}
+.homepage-button {
+    svg {
+        max-width: 5rem;
+        color: #9a9a9a;
+    }
+
+    a {
+        font-size: 1.3rem;
+    }
 }
