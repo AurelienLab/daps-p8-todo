@@ -1,0 +1,24 @@
+.task-card {
+  &__icon {
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+    padding: 0.5rem;
+    width: 3rem;
+    height: auto;
+    color: white;
+
+    &--success {
+      background-color: green;
+    }
+  }
+
+  button {
+    svg {
+      width: 1.2rem;
+    }
+
+    &:hover {
+      filter: brightness(150%);
+    }
+  }
+}

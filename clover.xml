@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1736418096">
-  <project timestamp="1736418096">
+<coverage generated="1736431165">
+  <project timestamp="1736431165">
     <file name="/Users/aurelien/PROJETS/OC/P8 - tests/TodoAndCo/src/Controller/HomepageController.php">
       <class name="App\Controller\HomepageController" namespace="global">
         <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
@@ -263,11 +263,11 @@
       <class name="App\Security\Voter\TaskVoter" namespace="global">
         <metrics complexity="8" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="7" elements="11" coveredelements="9"/>
       </class>
-      <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="21"/>
-      <line num="21" type="stmt" count="21"/>
-      <line num="24" type="method" name="supports" visibility="protected" complexity="2" crap="2" count="21"/>
-      <line num="28" type="stmt" count="21"/>
-      <line num="29" type="stmt" count="21"/>
+      <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="28"/>
+      <line num="21" type="stmt" count="28"/>
+      <line num="24" type="method" name="supports" visibility="protected" complexity="2" crap="2" count="28"/>
+      <line num="28" type="stmt" count="28"/>
+      <line num="29" type="stmt" count="28"/>
       <line num="33" type="method" name="voteOnAttribute" visibility="protected" complexity="5" crap="5.20" count="18"/>
       <line num="35" type="stmt" count="18"/>
       <line num="37" type="stmt" count="18"/>

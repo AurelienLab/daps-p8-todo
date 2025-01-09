@@ -1,5 +1,6 @@
 @import "~bootstrap/scss/bootstrap";
 @import "shop-homepage.css";
+@import "components/task-card.scss";
 
 body {
     background-color: #ffffff;
@@ -12,6 +13,13 @@ a {
         color: #095685;
     }
 }
+
+button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
 .homepage-button {
     svg {
         max-width: 5rem;
@@ -20,5 +28,15 @@ a {
 
     a {
         font-size: 1.3rem;
+    }
+}
+
+.task-add-btn {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 1.6rem;
+
+    svg {
+        width: 2rem;
     }
 }
