@@ -40,6 +40,7 @@
                                 {% endif %}
                             </small>
                         </div>
+                        {% if is_granted('TASK_EDIT', task) %}
                         <div class="task-card__edit-button">
                             <a href="{{ path('task_edit', {'id' : task.id }) }}" class="d-inline-flex flex-column align-items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -48,6 +49,7 @@
                                 <small>Modifier</small>
                             </a>
                         </div>
+                        {% endif %}
                     </div>
                     <p class="flex-grow-1 fw-light">
                         {{ task.content }}
