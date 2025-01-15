@@ -19,6 +19,7 @@ class TaskControllerTest extends WebTestCase
 
     private KernelBrowser $client;
     private null|object $router;
+    private UserRepository $userRepository;
 
 
     public function setUp(): void

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1736929846">
-  <project timestamp="1736929846">
+<coverage generated="1736932840">
+  <project timestamp="1736932840">
     <file name="/Users/aurelien/PROJETS/OC/P8 - tests/TodoAndCo/src/Controller/HomepageController.php">
       <class name="App\Controller\HomepageController" namespace="global">
         <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
@@ -191,15 +191,14 @@
     </file>
     <file name="/Users/aurelien/PROJETS/OC/P8 - tests/TodoAndCo/src/Form/TaskType.php">
       <class name="App\Form\TaskType" namespace="global">
-        <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="6" coveredelements="6"/>
+        <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
       </class>
-      <line num="11" type="method" name="buildForm" visibility="public" complexity="1" crap="1" count="7"/>
-      <line num="13" type="stmt" count="7"/>
-      <line num="14" type="stmt" count="7"/>
+      <line num="13" type="method" name="buildForm" visibility="public" complexity="1" crap="1" count="7"/>
       <line num="15" type="stmt" count="7"/>
       <line num="16" type="stmt" count="7"/>
       <line num="17" type="stmt" count="7"/>
-      <metrics loc="20" ncloc="20" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="6" coveredelements="6"/>
+      <line num="18" type="stmt" count="7"/>
+      <metrics loc="23" ncloc="23" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
     </file>
     <file name="/Users/aurelien/PROJETS/OC/P8 - tests/TodoAndCo/src/Form/UserType.php">
       <class name="App\Form\UserType" namespace="global">
@@ -276,6 +275,6 @@
       <line num="48" type="stmt" count="0"/>
       <metrics loc="53" ncloc="49" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="7" elements="11" coveredelements="9"/>
     </file>
-    <metrics files="12" loc="704" ncloc="691" classes="11" methods="48" coveredmethods="40" conditionals="0" coveredconditionals="0" statements="155" coveredstatements="131" elements="203" coveredelements="171"/>
+    <metrics files="12" loc="707" ncloc="694" classes="11" methods="48" coveredmethods="40" conditionals="0" coveredconditionals="0" statements="154" coveredstatements="130" elements="202" coveredelements="170"/>
   </project>
 </coverage>
