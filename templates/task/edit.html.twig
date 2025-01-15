@@ -5,7 +5,10 @@
         {{ form_start(form, {'action' : path('task_edit', { 'id' : task.id })}) }}
             {{ form_widget(form) }}
 
+        <div class="d-flex gap-2">
             <button type="submit" class="btn btn-success pull-right">Modifier</button>
+            <a href="{{ path('task_list') }}" class="btn btn-primary">Retour à la liste des tâches</a>
+        </div>
         {{ form_end(form) }}
     </div>
 {% endblock %}

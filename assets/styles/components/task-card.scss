@@ -4,7 +4,7 @@
     aspect-ratio: 1/1;
     padding: 0.5rem;
     width: 3rem;
-    height: auto;
+    height: 3rem;
     color: white;
 
     &--success {
@@ -13,6 +13,20 @@
 
     &--warning {
       background-color: #ffa632;
+    }
+  }
+
+  &__edit-button {
+    small {
+      visibility: hidden;
+    }
+
+    a:hover small {
+      visibility: visible;
+    }
+
+    svg {
+      width: 1.5rem;
     }
   }
 
