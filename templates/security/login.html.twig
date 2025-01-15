@@ -1,17 +1,26 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% if error %}
-        <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
 
-    <form action="{{ path('login') }}" method="post">
-        <label for="username">Nom d'utilisateur :</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+    <form class="login-form px-4 py-5 shadow" action="{{ path('login') }}" method="post">
+        <h1 class="text-center fs-3 text-primary-emphasis mb-5">Connexion</h1>
+        <!-- Email input -->
+        <div data-mdb-input-init class="form-outline mb-4">
+            <label class="form-label" for="username">Nom d'utilisateur</label>
+            <input type="text" name="_username" class="form-control" id="username" />
+        </div>
 
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" name="_password" />
+        <!-- Password input -->
+        <div data-mdb-input-init class="form-outline mb-4">
+            <label class="form-label" for="password">Mot de passe</label>
+            <input type="password" name="_password" class="form-control" id="password" />
+        </div>
 
-        <button class="btn btn-success" type="submit">Se connecter</button>
+        <!-- Submit button -->
+        <button  type="submit" class="btn btn-primary btn-block mb-4 w-100">Se connecter</button>
+
+        {% if error %}
+            <div class="alert alert-danger mt-3" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
     </form>
 {% endblock %}
