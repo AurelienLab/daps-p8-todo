@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1736932840">
-  <project timestamp="1736932840">
+<coverage generated="1736936429">
+  <project timestamp="1736936429">
     <file name="/Users/aurelien/PROJETS/OC/P8 - tests/TodoAndCo/src/Controller/HomepageController.php">
       <class name="App\Controller\HomepageController" namespace="global">
         <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
@@ -147,8 +147,8 @@
       </class>
       <line num="47" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="30"/>
       <line num="49" type="stmt" count="30"/>
-      <line num="53" type="method" name="getId" visibility="public" complexity="1" crap="1" count="3"/>
-      <line num="55" type="stmt" count="3"/>
+      <line num="53" type="method" name="getId" visibility="public" complexity="1" crap="1" count="5"/>
+      <line num="55" type="stmt" count="5"/>
       <line num="59" type="method" name="getUsername" visibility="public" complexity="1" crap="1" count="27"/>
       <line num="61" type="stmt" count="27"/>
       <line num="65" type="method" name="setUsername" visibility="public" complexity="1" crap="1" count="29"/>
@@ -191,14 +191,42 @@
     </file>
     <file name="/Users/aurelien/PROJETS/OC/P8 - tests/TodoAndCo/src/Form/TaskType.php">
       <class name="App\Form\TaskType" namespace="global">
-        <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+        <metrics complexity="4" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="31" coveredstatements="31" elements="33" coveredelements="33"/>
       </class>
-      <line num="13" type="method" name="buildForm" visibility="public" complexity="1" crap="1" count="7"/>
-      <line num="15" type="stmt" count="7"/>
-      <line num="16" type="stmt" count="7"/>
-      <line num="17" type="stmt" count="7"/>
-      <line num="18" type="stmt" count="7"/>
-      <metrics loc="23" ncloc="23" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+      <line num="20" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="7"/>
+      <line num="24" type="stmt" count="7"/>
+      <line num="27" type="method" name="buildForm" visibility="public" complexity="3" crap="3" count="7"/>
+      <line num="29" type="stmt" count="7"/>
+      <line num="30" type="stmt" count="7"/>
+      <line num="31" type="stmt" count="7"/>
+      <line num="32" type="stmt" count="7"/>
+      <line num="33" type="stmt" count="7"/>
+      <line num="34" type="stmt" count="7"/>
+      <line num="35" type="stmt" count="7"/>
+      <line num="36" type="stmt" count="7"/>
+      <line num="37" type="stmt" count="7"/>
+      <line num="38" type="stmt" count="7"/>
+      <line num="39" type="stmt" count="7"/>
+      <line num="40" type="stmt" count="7"/>
+      <line num="42" type="stmt" count="7"/>
+      <line num="43" type="stmt" count="7"/>
+      <line num="44" type="stmt" count="7"/>
+      <line num="45" type="stmt" count="7"/>
+      <line num="48" type="stmt" count="7"/>
+      <line num="50" type="stmt" count="7"/>
+      <line num="51" type="stmt" count="2"/>
+      <line num="52" type="stmt" count="2"/>
+      <line num="53" type="stmt" count="2"/>
+      <line num="54" type="stmt" count="2"/>
+      <line num="55" type="stmt" count="2"/>
+      <line num="56" type="stmt" count="2"/>
+      <line num="57" type="stmt" count="2"/>
+      <line num="58" type="stmt" count="2"/>
+      <line num="59" type="stmt" count="2"/>
+      <line num="60" type="stmt" count="2"/>
+      <line num="62" type="stmt" count="7"/>
+      <line num="63" type="stmt" count="7"/>
+      <metrics loc="68" ncloc="67" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="31" coveredstatements="31" elements="33" coveredelements="33"/>
     </file>
     <file name="/Users/aurelien/PROJETS/OC/P8 - tests/TodoAndCo/src/Form/UserType.php">
       <class name="App\Form\UserType" namespace="global">
@@ -275,6 +303,6 @@
       <line num="48" type="stmt" count="0"/>
       <metrics loc="53" ncloc="49" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="7" elements="11" coveredelements="9"/>
     </file>
-    <metrics files="12" loc="707" ncloc="694" classes="11" methods="48" coveredmethods="40" conditionals="0" coveredconditionals="0" statements="154" coveredstatements="130" elements="202" coveredelements="170"/>
+    <metrics files="12" loc="752" ncloc="738" classes="11" methods="49" coveredmethods="41" conditionals="0" coveredconditionals="0" statements="181" coveredstatements="157" elements="230" coveredelements="198"/>
   </project>
 </coverage>
