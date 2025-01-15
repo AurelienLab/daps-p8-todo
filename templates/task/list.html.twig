@@ -14,14 +14,22 @@
 
     <div class="row">
         {% for task in tasks %}
-            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-3">
                 <article class="task-card shadow p-4 h-100 d-flex flex-column gap-3">
                     <div class="d-flex align-items-center gap-2">
-                        <div class="task-card__icon task-card__icon--success">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                            </svg>
-                        </div>
+                        {% if task.isDone %}
+                            <div class="task-card__icon task-card__icon--success">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                                </svg>
+                            </div>
+                        {% else %}
+                            <div class="task-card__icon task-card__icon--warning">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                            </div>
+                        {% endif %}
                         <div>
                             <h4 class="mb-0">{{ task.title }}</h4>
                             <small class="fw-lighter">
@@ -55,6 +63,7 @@
                                 </button>
                             {% endif %}
                         </form>
+                        {% if is_granted('TASK_DELETE', task) %}
                         <form action="{{ path('task_delete', {'id' : task.id }) }}">
                             <button class="text-danger d-flex align-items-center gap-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -64,6 +73,7 @@
                                 <span>Supprimer</span>
                             </button>
                         </form>
+                        {% endif %}
                     </div>
                 </article>
             </div>
