@@ -62,16 +62,23 @@ class UserController extends AbstractController
     {
         $form = $this->createForm(UserType::class, $user);
 
+        $originalHashedPassword = $user->getPassword();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $this->userPasswordHasher->hashPassword($user, $user->getPassword());
-            $user->setPassword($password);
+
+            if (!empty($form->get('password')?->getData())) {
+                $password = $this->userPasswordHasher->hashPassword($user, $user->getPassword());
+                $user->setPassword($password);
+            } else {
+                $user->setPassword($originalHashedPassword);
+            }
+
             $user->setRoles([$form->get('roles')->getData()]);
 
             $this->entityManager->flush();
 
-            $this->addFlash('success', "L'utilisateur a bien été modifié");
+            $this->addFlash('success', "L'utilisateur a bien été modifié.");
 
             return $this->redirectToRoute('user_list');
         }

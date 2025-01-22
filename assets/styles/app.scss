@@ -1,0 +1,43 @@
+@import "~bootstrap/scss/bootstrap";
+@import "shop-homepage.css";
+@import "components/task-card.scss";
+@import "components/login-form";
+
+body {
+    background-color: #ffffff;
+}
+
+a {
+    text-decoration: none;
+    color: #0c77bd;
+    &:hover {
+        color: #095685;
+    }
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.homepage-button {
+    svg {
+        max-width: 5rem;
+        color: #9a9a9a;
+    }
+
+    a {
+        font-size: 1.3rem;
+    }
+}
+
+.task-add-btn {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 1.6rem;
+
+    svg {
+        width: 2rem;
+    }
+}
