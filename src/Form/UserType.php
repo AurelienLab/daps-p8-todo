@@ -29,37 +29,40 @@ class UserType extends AbstractType
         $isCreation = !$this->entityManager->contains($user);
         $builder
             ->add(
-                'username', TextType::class, [
-                              'label' => "Nom d'utilisateur",
-                          ]
+                'username', TextType::class,
+                [
+                    'label' => "Nom d'utilisateur",
+                ]
             )
             ->add(
-                'password', RepeatedType::class, [
-                              'type' => PasswordType::class,
-                              'invalid_message' => 'Les deux mots de passe doivent correspondre.',
-                              'required' => $isCreation,
-                              'first_options' => [
-                                  'label' => 'Mot de passe',
-                                  'help' => !$isCreation ? 'Laisser les champs vides pour ne pas modifier le mot de passe' : null
-                              ],
-                              'second_options' => ['label' => 'Tapez le mot de passe à nouveau'],
-                          ]
+                'password', RepeatedType::class,
+                [
+                    'type' => PasswordType::class,
+                    'invalid_message' => 'Les deux mots de passe doivent correspondre.',
+                    'required' => $isCreation,
+                    'first_options' => [
+                        'label' => 'Mot de passe',
+                        'help' => !$isCreation ? 'Laisser les champs vides pour ne pas modifier le mot de passe' : null
+                    ],
+                    'second_options' => ['label' => 'Tapez le mot de passe à nouveau'],
+                ]
             )
             ->add(
-                'roles', ChoiceType::class, [
-                           'label' => 'Rôle',
-                           'choices' => [
-                               'Utilisateur' => 'ROLE_USER',
-                               'Administrateur' => 'ROLE_ADMIN'
-                           ],
-                           'mapped' => false,
-                           'required' => true,
-                           'data' => $builder->getData()->getRoles()[0],
-                           'constraints' => [
-                               new NotBlank(),
-                               new NotNull()
-                           ]
-                       ]
+                'roles', ChoiceType::class,
+                [
+                    'label' => 'Rôle',
+                    'choices' => [
+                        'Utilisateur' => 'ROLE_USER',
+                        'Administrateur' => 'ROLE_ADMIN'
+                    ],
+                    'mapped' => false,
+                    'required' => true,
+                    'data' => $builder->getData()->getRoles()[0],
+                    'constraints' => [
+                        new NotBlank(),
+                        new NotNull()
+                    ]
+                ]
             )
             ->add('email', EmailType::class, ['label' => 'Adresse email'])
         ;

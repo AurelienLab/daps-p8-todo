@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class HomepageControllerTest extends WebTestCase
 {
 
+
     public function testHomepage()
     {
         $client = static::createClient();
@@ -14,6 +15,8 @@ class HomepageControllerTest extends WebTestCase
         $url = $router->generate('homepage');
         $client->request('GET', $url);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
     }
+
 
 }

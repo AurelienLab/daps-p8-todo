@@ -17,7 +17,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
 
-
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "AUTO")]
     #[ORM\Column]
@@ -27,8 +26,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $username;
 
     #[ORM\Column(type: 'json')]
-//    #[Assert\NotBlank]
-//    #[Assert\NotNull]
     private ?array $roles = [];
 
     #[ORM\Column(type: 'string', length: 64)]

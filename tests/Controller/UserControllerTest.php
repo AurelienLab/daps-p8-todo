@@ -16,7 +16,9 @@ class UserControllerTest extends WebTestCase
     use ReloadDatabaseTrait;
 
     private KernelBrowser $client;
+
     private UserRepository $userRepository;
+
     private null|object $router;
 
 
@@ -25,6 +27,7 @@ class UserControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->router = static::$kernel->getContainer()->get('router');
         $this->userRepository = $this->getContainer()->get(UserRepository::class);
+
     }
 
 
@@ -33,6 +36,7 @@ class UserControllerTest extends WebTestCase
         $url = $this->router->generate('user_list');
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseRedirects('/login');
+
     }
 
 
@@ -44,6 +48,7 @@ class UserControllerTest extends WebTestCase
         $url = $this->router->generate('user_list');
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+
     }
 
 
@@ -52,6 +57,7 @@ class UserControllerTest extends WebTestCase
         $url = $this->router->generate('user_create');
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseRedirects('/login');
+
     }
 
 
@@ -63,6 +69,7 @@ class UserControllerTest extends WebTestCase
         $url = $this->router->generate('user_create');
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseIsSuccessful();
+
     }
 
 
@@ -91,6 +98,7 @@ class UserControllerTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! L\'utilisateur a bien été ajouté.');
+
     }
 
 
@@ -115,6 +123,7 @@ class UserControllerTest extends WebTestCase
 
         $this->client->submit($form);
         $this->assertResponseStatusCodeSame(500);
+
     }
 
 
@@ -139,6 +148,7 @@ class UserControllerTest extends WebTestCase
 
         $this->client->submit($form);
         $this->assertSelectorTextContains('div.invalid-feedback', 'This value is already used.');
+
     }
 
 
@@ -148,6 +158,7 @@ class UserControllerTest extends WebTestCase
         $url = $this->router->generate('user_edit', ['id' => $userToEdit->getId()]);
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseRedirects('/login');
+
     }
 
 
@@ -160,6 +171,7 @@ class UserControllerTest extends WebTestCase
         $url = $this->router->generate('user_edit', ['id' => $userToEdit->getId()]);
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+
     }
 
 
@@ -172,6 +184,7 @@ class UserControllerTest extends WebTestCase
         $url = $this->router->generate('user_edit', ['id' => $userToEdit->getId()]);
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseIsSuccessful();
+
     }
 
 
@@ -197,6 +210,7 @@ class UserControllerTest extends WebTestCase
         $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! L\'utilisateur a bien été modifié.');
         $this->assertSelectorCount(3, 'tbody tr');
         $this->assertAnySelectorTextContains('td', 'john-new');
+
     }
 
 
