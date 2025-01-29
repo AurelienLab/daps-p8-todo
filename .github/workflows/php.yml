@@ -16,9 +16,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 22
+    - uses: comchangs/action-yarn@v0.1-beta
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
@@ -35,8 +33,8 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: Install NPM dependencies && assets
-      run: npm install && npm run build
+    - name: action-yarn
+      run: yarn && yarn build
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md
