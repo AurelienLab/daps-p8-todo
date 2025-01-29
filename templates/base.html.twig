@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
+        <meta name="description" content="L'application qui simplifie la gestion de vos tâches au quotidien !">
         <meta name="author" content="">
 
         <title>To Do List app</title>
@@ -16,7 +16,7 @@
     </head>
 
     <body>
-        <header class="navbar navbar-light navbar-fixed-top bg-white shadow mb-5 mx-auto justify-content-center" role="navigation">
+        <header class="navbar navbar-light navbar-fixed-top bg-white shadow mb-5 mx-auto justify-content-center" role="banner">
             <div class="container row">
                 <div class="navbar-header col-12 col-sm-auto text-center text-sm-left">
                     <a class="navbar-brand" href="{{ path('homepage') }}">To Do List app</a>
@@ -24,16 +24,19 @@
                     <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" />
                 </div>
                 <div class="col-12 col-sm-auto">
-                    <nav class="d-flex flex-row justify-content-center justify-content-sm-end gap-3 list-unstyled m-0">
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <li><a href="{{ path('user_list') }}">Utilisateurs</a></li>
-                        {% endif %}
+                    <nav>
+                        <ul role="menu" class="d-flex flex-row justify-content-center justify-content-sm-end gap-3 list-unstyled m-0">
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li role="menuitem"><a href="{{ path('user_list') }}">Utilisateurs</a></li>
+                            {% endif %}
 
-                        {% if app.user %}
-                            <li><a href="{{ path('logout') }}">Déconnexion</a></li>
-                        {% else %}
-                            <li><a href="{{ path('login') }}">Connexion</a></li>
-                        {% endif %}
+                            {% if app.user %}
+                                    <li role="menuitem"><a href="{{ path('logout') }}">Déconnexion</a></li>
+                            {% else %}
+                                <li role="menuitem"><a href="{{ path('login') }}">Connexion</a></li>
+                            {% endif %}
+                        </ul>
+
                     </nav>
                 </div>
             </div>
@@ -57,7 +60,7 @@
                     {% endfor %}
 
                     {% block header_title %}{% endblock %}
-                    {% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_homepage.jpg') }}" alt="todo list">{% endblock %}
+                    {% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_homepage-min.webp') }}" alt="todo list">{% endblock %}
                 </div>
             </div>
 

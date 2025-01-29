@@ -19,6 +19,7 @@ class UserController extends AbstractController
         private readonly EntityManagerInterface      $entityManager,
         private readonly UserPasswordHasherInterface $userPasswordHasher
     ) {
+        
     }
 
 
@@ -27,6 +28,7 @@ class UserController extends AbstractController
     public function listAction()
     {
         return $this->render('user/list.html.twig', ['users' => $this->entityManager->getRepository(User::class)->findAll()]);
+
     }
 
 
@@ -53,6 +55,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
+
     }
 
 
@@ -84,6 +87,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
+
     }
 
 

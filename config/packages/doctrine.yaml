@@ -9,6 +9,15 @@ doctrine:
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
     orm:
+        second_level_cache:
+            enabled: true
+            regions:
+                global:
+                    # expire automatically after 10 days
+                    lifetime: 864000
+                    # let's use app's main cache pool
+                    # (in my case it's using Redis)
+                    cache_driver: { type: service, id: cache.app }
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
         report_fields_where_declared: true
@@ -32,7 +41,9 @@ when@test:
         dbal:
             # "TEST_TOKEN" is typically set by ParaTest
             dbname_suffix: '_test%env(default::TEST_TOKEN)%'
-
+        orm:
+            second_level_cache:
+                enabled: false
 when@prod:
     doctrine:
         orm:

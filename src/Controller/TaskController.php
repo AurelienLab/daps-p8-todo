@@ -17,6 +17,7 @@ class TaskController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager
     ) {
+
     }
 
 
@@ -24,6 +25,7 @@ class TaskController extends AbstractController
     public function listAction()
     {
         return $this->render('task/list.html.twig', ['tasks' => $this->entityManager->getRepository(Task::class)->findAll()]);
+
     }
 
 
@@ -48,6 +50,7 @@ class TaskController extends AbstractController
         }
 
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
+
     }
 
 
@@ -68,10 +71,11 @@ class TaskController extends AbstractController
         }
 
         return $this->render(
-            'task/edit.html.twig', [
-                                     'form' => $form->createView(),
-                                     'task' => $task,
-                                 ]
+            'task/edit.html.twig',
+            [
+                'form' => $form->createView(),
+                'task' => $task,
+            ]
         );
     }
 

@@ -28,14 +28,16 @@ class TaskType extends AbstractType
     {
         $builder
             ->add(
-                'title', TextType::class, [
-                           'label' => 'Titre'
-                       ]
+                'title', TextType::class,
+                [
+                    'label' => 'Titre'
+                ]
             )
             ->add(
-                'content', TextareaType::class, [
-                             'label' => 'Contenu'
-                         ]
+                'content', TextareaType::class,
+                [
+                    'label' => 'Contenu'
+                ]
             )
         ;
 
@@ -49,14 +51,16 @@ class TaskType extends AbstractType
 
             if ($this->security->isGranted('ROLE_ADMIN')) {
                 $form->add(
-                    'author', EntityType::class, [
-                                'class' => User::class,
-                                'label' => 'Auteur',
-                                'placeholder' => 'Sélectionner un auteur',
-                                'choice_label' => 'username',
-                                'choice_value' => 'id',
-                                'data' => $defaultUser
-                            ]
+                    'author',
+                    EntityType::class,
+                    [
+                        'class' => User::class,
+                        'label' => 'Auteur',
+                        'placeholder' => 'Sélectionner un auteur',
+                        'choice_label' => 'username',
+                        'choice_value' => 'id',
+                        'data' => $defaultUser
+                    ]
                 );
             }
         }
