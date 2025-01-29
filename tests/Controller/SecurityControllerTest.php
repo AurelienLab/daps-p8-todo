@@ -31,7 +31,7 @@ class SecurityControllerTest extends WebTestCase
 
         $form = $crawler->selectButton('Se connecter')->form(
             [
-                '_username' => 'john',
+                '_username' => 'john@doe.com',
                 '_password' => 'azerty123'
             ]
         );
