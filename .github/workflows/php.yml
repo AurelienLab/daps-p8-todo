@@ -16,8 +16,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: comchangs/action-yarn@v0.1-beta
-
+    
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
 
