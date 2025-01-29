@@ -12,6 +12,7 @@ class SecurityControllerTest extends WebTestCase
 
     use ReloadDatabaseTrait;
 
+
     public function testLoginPage()
     {
         $client = static::createClient();
@@ -19,6 +20,7 @@ class SecurityControllerTest extends WebTestCase
         $url = $router->generate('login');
         $client->request('GET', $url);
         $this->assertResponseStatusCodeSame(200);
+
     }
 
 
@@ -31,7 +33,7 @@ class SecurityControllerTest extends WebTestCase
 
         $form = $crawler->selectButton('Se connecter')->form(
             [
-                '_username' => 'john',
+                '_username' => 'john@doe.com',
                 '_password' => 'azerty123'
             ]
         );
@@ -40,8 +42,8 @@ class SecurityControllerTest extends WebTestCase
         $this->assertResponseRedirects();
         $client->followRedirect();
 
-
         $this->assertResponseStatusCodeSame(200);
+
     }
 
 
@@ -59,6 +61,7 @@ class SecurityControllerTest extends WebTestCase
         $this->assertResponseRedirects();
         $client->followRedirect();
         $this->assertResponseStatusCodeSame(200);
+        
     }
 
 

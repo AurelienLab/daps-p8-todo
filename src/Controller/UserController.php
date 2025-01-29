@@ -19,6 +19,7 @@ class UserController extends AbstractController
         private readonly EntityManagerInterface      $entityManager,
         private readonly UserPasswordHasherInterface $userPasswordHasher
     ) {
+        
     }
 
 
@@ -27,6 +28,7 @@ class UserController extends AbstractController
     public function listAction()
     {
         return $this->render('user/list.html.twig', ['users' => $this->entityManager->getRepository(User::class)->findAll()]);
+
     }
 
 
@@ -53,6 +55,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
+
     }
 
 
@@ -62,21 +65,29 @@ class UserController extends AbstractController
     {
         $form = $this->createForm(UserType::class, $user);
 
+        $originalHashedPassword = $user->getPassword();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $this->userPasswordHasher->hashPassword($user, $user->getPassword());
-            $user->setPassword($password);
+
+            if (!empty($form->get('password')?->getData())) {
+                $password = $this->userPasswordHasher->hashPassword($user, $user->getPassword());
+                $user->setPassword($password);
+            } else {
+                $user->setPassword($originalHashedPassword);
+            }
+
             $user->setRoles([$form->get('roles')->getData()]);
 
             $this->entityManager->flush();
 
-            $this->addFlash('success', "L'utilisateur a bien été modifié");
+            $this->addFlash('success', "L'utilisateur a bien été modifié.");
 
             return $this->redirectToRoute('user_list');
         }
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
+
     }
 
 

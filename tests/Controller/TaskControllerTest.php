@@ -18,7 +18,10 @@ class TaskControllerTest extends WebTestCase
     use ReloadDatabaseTrait;
 
     private KernelBrowser $client;
+
     private null|object $router;
+
+    private UserRepository $userRepository;
 
 
     public function setUp(): void
@@ -26,6 +29,7 @@ class TaskControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->router = static::$kernel->getContainer()->get('router');
         $this->userRepository = $this->getContainer()->get(UserRepository::class);
+
     }
 
 
@@ -34,6 +38,7 @@ class TaskControllerTest extends WebTestCase
         $url = $this->router->generate('task_list');
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+
     }
 
 
@@ -41,7 +46,8 @@ class TaskControllerTest extends WebTestCase
     {
         $url = $this->router->generate('task_list');
         $this->client->request(Request::METHOD_GET, $url);
-        $this->assertSelectorTextContains('.thumbnail', 'Test Task Undone');
+        $this->assertSelectorTextContains('.task-card', 'Test Task Undone');
+
     }
 
 
@@ -53,6 +59,7 @@ class TaskControllerTest extends WebTestCase
         $url = $this->router->generate('task_create');
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+
     }
 
 
@@ -63,6 +70,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertResponseRedirects();
         $this->client->followRedirect();
         $this->assertRouteSame('login');
+
     }
 
 
@@ -88,12 +96,13 @@ class TaskControllerTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche a été bien été ajoutée.');
-        $this->assertCount(4, $crawler->filter('.thumbnail'));
+        $this->assertCount(4, $crawler->filter('.task-card'));
 
         $taskRepository = $this->getContainer()->get(TaskRepository::class);
         $task = $taskRepository->findOneBy(['title' => 'New Task']);
         $this->assertNotNull($task);
         $this->assertEquals($task->getAuthor()->getId(), $user->getId());
+
     }
 
 
@@ -114,7 +123,8 @@ class TaskControllerTest extends WebTestCase
         );
 
         $this->client->submit($form);
-        $this->assertSelectorTextContains('li', 'Vous devez saisir un titre.');
+        $this->assertSelectorTextContains('div.invalid-feedback', 'Vous devez saisir un titre.');
+
     }
 
 
@@ -135,7 +145,8 @@ class TaskControllerTest extends WebTestCase
         );
 
         $this->client->submit($form);
-        $this->assertSelectorTextContains('li', 'Vous devez saisir du contenu.');
+        $this->assertSelectorTextContains('div.invalid-feedback', 'Vous devez saisir du contenu.');
+
     }
 
 
@@ -144,12 +155,13 @@ class TaskControllerTest extends WebTestCase
         $url = $this->router->generate('task_list');
         $crawler = $this->client->request(Request::METHOD_GET, $url);
 
-        $form = $crawler->selectButton('Marquer comme faite')->form();
+        $form = $crawler->selectButton('Terminer')->form();
 
         $this->client->submit($form);
         $this->assertResponseRedirects();
         $this->client->followRedirect();
         $this->assertRouteSame('login');
+
     }
 
 
@@ -161,15 +173,16 @@ class TaskControllerTest extends WebTestCase
         $url = $this->router->generate('task_list');
         $crawler = $this->client->request(Request::METHOD_GET, $url);
 
-        $form = $crawler->selectButton('Marquer comme faite')->form();
+        $form = $crawler->selectButton('Terminer')->form();
 
         $this->client->submit($form);
         $this->assertResponseRedirects();
         $crawler = $this->client->followRedirect();
 
         $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche Test Task Undone a bien été marquée comme faite.');
-        $this->assertCount(2, $crawler->filter('.glyphicon-ok'));
-        $this->assertCount(1, $crawler->filter('.glyphicon-remove'));
+        $this->assertCount(2, $crawler->filter('.task-card__icon--success'));
+        $this->assertCount(1, $crawler->filter('.task-card__icon--warning'));
+
     }
 
 
@@ -178,12 +191,13 @@ class TaskControllerTest extends WebTestCase
         $url = $this->router->generate('task_list');
         $crawler = $this->client->request(Request::METHOD_GET, $url);
 
-        $form = $crawler->selectButton('Marquer non terminée')->form();
+        $form = $crawler->selectButton('Réouvrir')->form();
 
         $this->client->submit($form);
         $this->assertResponseRedirects();
         $this->client->followRedirect();
         $this->assertRouteSame('login');
+
     }
 
 
@@ -195,15 +209,16 @@ class TaskControllerTest extends WebTestCase
         $url = $this->router->generate('task_list');
         $crawler = $this->client->request(Request::METHOD_GET, $url);
 
-        $form = $crawler->selectButton('Marquer non terminée')->form();
+        $form = $crawler->selectButton('Réouvrir')->form();
 
         $this->client->submit($form);
         $this->assertResponseRedirects();
         $crawler = $this->client->followRedirect();
 
         $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche Test Task Done a bien été marquée comme faite.');
-        $this->assertCount(0, $crawler->filter('.glyphicon-ok'));
-        $this->assertCount(3, $crawler->filter('.glyphicon-remove'));
+        $this->assertCount(0, $crawler->filter('.task-card__icon--success'));
+        $this->assertCount(3, $crawler->filter('.task-card__icon--warning'));
+
     }
 
 
@@ -233,7 +248,7 @@ class TaskControllerTest extends WebTestCase
         $url = $this->router->generate('task_list');
         $this->client->request(Request::METHOD_GET, $url);
 
-        $this->assertSelectorCount(1, 'form > button.btn.btn-danger');
+        $this->assertSelectorCount(1, 'form > button.text-danger');
 
         $taskRepository = $this->getContainer()->get(TaskRepository::class);
         $task = $taskRepository->findOneBy(['author' => null]);
@@ -254,7 +269,7 @@ class TaskControllerTest extends WebTestCase
         $url = $this->router->generate('task_list');
         $this->client->request(Request::METHOD_GET, $url);
 
-        $this->assertSelectorCount(3, 'form > button.btn.btn-danger');
+        $this->assertSelectorCount(3, 'form > button.text-danger');
 
         $taskRepository = $this->getContainer()->get(TaskRepository::class);
         $task = $taskRepository->findOneBy(['author' => null]);
@@ -275,7 +290,7 @@ class TaskControllerTest extends WebTestCase
 
         $url = $this->router->generate('task_list');
         $this->client->request(Request::METHOD_GET, $url);
-        $this->assertSelectorCount(1, 'form > button.btn.btn-danger');
+        $this->assertSelectorCount(1, 'form > button.text-danger');
 
         $taskRepository = $this->getContainer()->get(TaskRepository::class);
         $task = $taskRepository->findOneBy(['author' => $user]);
@@ -298,7 +313,7 @@ class TaskControllerTest extends WebTestCase
 
         $url = $this->router->generate('task_list');
         $this->client->request(Request::METHOD_GET, $url);
-        $this->assertSelectorCount(0, 'form > button.btn.btn-danger');
+        $this->assertSelectorCount(0, 'form > button.text-danger');
 
         $taskRepository = $this->getContainer()->get(TaskRepository::class);
         $task = $taskRepository->findOneBy(['author' => $user]);
@@ -320,6 +335,7 @@ class TaskControllerTest extends WebTestCase
         $this->client->request(Request::METHOD_GET, $url);
         $this->client->followRedirect();
         $this->assertRouteSame('login');
+
     }
 
 
@@ -334,6 +350,7 @@ class TaskControllerTest extends WebTestCase
         $url = $this->router->generate('task_edit', ['id' => $task->getId()]);
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+
     }
 
 
@@ -360,6 +377,7 @@ class TaskControllerTest extends WebTestCase
         $this->client->followRedirect();
         $this->assertRouteSame('task_list');
         $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche a bien été modifiée.');
+
     }
 
 
@@ -388,6 +406,7 @@ class TaskControllerTest extends WebTestCase
         $this->client->followRedirect();
         $this->assertRouteSame('task_list');
         $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche a bien été modifiée.');
+
     }
 
 
@@ -414,6 +433,7 @@ class TaskControllerTest extends WebTestCase
         $this->client->followRedirect();
         $this->assertRouteSame('task_list');
         $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! La tâche a bien été modifiée.');
+
     }
 
 
@@ -430,6 +450,7 @@ class TaskControllerTest extends WebTestCase
         $url = $this->router->generate('task_edit', ['id' => $task->getId()]);
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+
     }
 
 

@@ -3,8 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Repository\UserRepository;
-use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
-use http\Exception\InvalidArgumentException;
+use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,10 +13,12 @@ class UserControllerTest extends WebTestCase
 {
 
 
-    use RefreshDatabaseTrait;
+    use ReloadDatabaseTrait;
 
     private KernelBrowser $client;
+
     private UserRepository $userRepository;
+
     private null|object $router;
 
 
@@ -26,6 +27,7 @@ class UserControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->router = static::$kernel->getContainer()->get('router');
         $this->userRepository = $this->getContainer()->get(UserRepository::class);
+
     }
 
 
@@ -34,6 +36,7 @@ class UserControllerTest extends WebTestCase
         $url = $this->router->generate('user_list');
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseRedirects('/login');
+
     }
 
 
@@ -45,6 +48,7 @@ class UserControllerTest extends WebTestCase
         $url = $this->router->generate('user_list');
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+
     }
 
 
@@ -53,6 +57,7 @@ class UserControllerTest extends WebTestCase
         $url = $this->router->generate('user_create');
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseRedirects('/login');
+
     }
 
 
@@ -64,6 +69,7 @@ class UserControllerTest extends WebTestCase
         $url = $this->router->generate('user_create');
         $this->client->request(Request::METHOD_GET, $url);
         $this->assertResponseIsSuccessful();
+
     }
 
 
@@ -92,6 +98,7 @@ class UserControllerTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! L\'utilisateur a bien été ajouté.');
+
     }
 
 
@@ -116,6 +123,7 @@ class UserControllerTest extends WebTestCase
 
         $this->client->submit($form);
         $this->assertResponseStatusCodeSame(500);
+
     }
 
 
@@ -139,7 +147,70 @@ class UserControllerTest extends WebTestCase
         );
 
         $this->client->submit($form);
-        $this->assertSelectorTextContains('li', 'This value is already used.');
+        $this->assertSelectorTextContains('div.invalid-feedback', 'This value is already used.');
+
+    }
+
+
+    public function testEditUserPageUnauthenticated(): void
+    {
+        $userToEdit = $this->userRepository->findOneByEmail('john@doe.com');
+        $url = $this->router->generate('user_edit', ['id' => $userToEdit->getId()]);
+        $this->client->request(Request::METHOD_GET, $url);
+        $this->assertResponseRedirects('/login');
+
+    }
+
+
+    public function testEditUserPageNonAdmin(): void
+    {
+        $user = $this->userRepository->findOneByEmail('john@doe.com');
+        $this->client->loginUser($user);
+
+        $userToEdit = $this->userRepository->findOneByEmail('john@doe.com');
+        $url = $this->router->generate('user_edit', ['id' => $userToEdit->getId()]);
+        $this->client->request(Request::METHOD_GET, $url);
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+
+    }
+
+
+    public function testEditUserPageAdmin(): void
+    {
+        $admin = $this->userRepository->findOneByEmail('admin@doe.com');
+        $this->client->loginUser($admin);
+
+        $userToEdit = $this->userRepository->findOneByEmail('john@doe.com');
+        $url = $this->router->generate('user_edit', ['id' => $userToEdit->getId()]);
+        $this->client->request(Request::METHOD_GET, $url);
+        $this->assertResponseIsSuccessful();
+
+    }
+
+
+    public function testEditUser(): void
+    {
+        $admin = $this->userRepository->findOneByEmail('admin@doe.com');
+        $this->client->loginUser($admin);
+
+        $userToEdit = $this->userRepository->findOneByEmail('john@doe.com');
+        $url = $this->router->generate('user_edit', ['id' => $userToEdit->getId()]);
+        $crawler = $this->client->request(Request::METHOD_GET, $url);
+
+        $form = $crawler->selectButton('Modifier')->form(
+            [
+                'user[username]' => 'john-new',
+            ]
+        );
+
+        $this->client->submit($form);
+        $this->client->followRedirect();
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorTextContains('div.alert.alert-success', 'Superbe ! L\'utilisateur a bien été modifié.');
+        $this->assertSelectorCount(3, 'tbody tr');
+        $this->assertAnySelectorTextContains('td', 'john-new');
+
     }
 
 
