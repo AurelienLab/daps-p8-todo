@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
+#[ORM\Cache(usage: 'NONSTRICT_READ_WRITE', region: 'global')]
 #[ORM\Table('task')]
 class Task
 {
@@ -100,10 +101,12 @@ class Task
         $this->isDone = $flag;
     }
 
+
     public function getAuthor(): ?User
     {
         return $this->author;
     }
+
 
     public function setAuthor(?User $author): static
     {

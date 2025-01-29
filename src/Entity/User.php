@@ -12,6 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Table('user')]
 #[ORM\Entity]
+#[ORM\Cache(usage: 'NONSTRICT_READ_WRITE', region: 'global')]
 #[UniqueEntity('email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
