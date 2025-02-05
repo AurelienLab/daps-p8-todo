@@ -23,7 +23,7 @@ host('prod')
 
 task(
     'build', function () {
-    run('cd {{release_path}} && {{bin/yarn}} prod');
+    run('cd {{release_path}} && {{bin/yarn}} build');
 }
 );
 
@@ -31,5 +31,7 @@ task(
 
 after('deploy:vendors', 'yarn:install');
 after('yarn:install', 'build');
+
+before('deploy:publish', 'database:migrate');
 
 after('deploy:failed', 'deploy:unlock');
