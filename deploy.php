@@ -6,6 +6,8 @@ require 'recipe/symfony.php';
 require 'contrib/yarn.php';
 // Config
 
+set('composer_options', '--verbose --prefer-dist --no-progress --no-interaction --optimize-autoloader');
+
 set('repository', 'git@github.com:AurelienLab/daps-p8-todo.git');
 
 add('shared_files', []);
