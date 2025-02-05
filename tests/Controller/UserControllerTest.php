@@ -190,6 +190,8 @@ class UserControllerTest extends WebTestCase
 
     public function testEditUser(): void
     {
+        $entityManager = $this->getContainer()->get('doctrine')->getManager();
+
         $admin = $this->userRepository->findOneByEmail('admin@doe.com');
         $this->client->loginUser($admin);
 
