@@ -16,7 +16,7 @@ add('writable_dirs', []);
 host('prod')
     ->set('hostname', 'vmedias-prod') // requires config in ~/.ssh/config
     ->set('deploy_path', '/srv/www/daps/p8')
-    ->set('branch', 'main')
+    ->set('branch', 'develop')
 ;
 
 task(
