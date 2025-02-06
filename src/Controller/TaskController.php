@@ -46,6 +46,11 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
+            $cache = $this->entityManager->getCache();
+            if ($cache && $this->entityManager->getConfiguration()->isSecondLevelCacheEnabled()) {
+                $cache->evictEntityRegion(Task::class);
+            }
+
             return $this->redirectToRoute('task_list');
         }
 

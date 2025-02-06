@@ -19,7 +19,7 @@ class UserController extends AbstractController
         private readonly EntityManagerInterface      $entityManager,
         private readonly UserPasswordHasherInterface $userPasswordHasher
     ) {
-        
+
     }
 
 
