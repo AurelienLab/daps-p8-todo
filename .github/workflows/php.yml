@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  XDEBUG_MODE: coverage
+
 jobs:
   build:
 
