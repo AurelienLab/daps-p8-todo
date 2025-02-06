@@ -13,7 +13,7 @@ class SecurityController extends AbstractController
 
 
     #[Route('/login', name: 'login')]
-    public function loginAction(Request $request, AuthenticationUtils $authenticationUtils)
+    public function loginAction(AuthenticationUtils $authenticationUtils)
     {
 
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -35,10 +35,10 @@ class SecurityController extends AbstractController
     {
 
         // logout the user in on the current firewall
-        $response = $security->logout();
+        $security->logout();
 
         return $this->redirectToRoute('homepage');
-        
+
     }
 
 
