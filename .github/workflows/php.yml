@@ -51,7 +51,7 @@ jobs:
     - name: Push coverage to codacy
       run: export CODACY_PROJECT_TOKEN=fac315782c644ca0a32283fc9b07c493 && bash <(curl -Ls https://coverage.codacy.com/get.sh)
     - name: Generate code coverage report
-      run: php bin/phpunit --coverage-html public/coverage
+      run: php bin/phpunit --coverage-html coverage
 
     - uses: EndBug/add-and-commit@v9
       with:
