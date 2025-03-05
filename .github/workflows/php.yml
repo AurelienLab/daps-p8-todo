@@ -54,6 +54,6 @@ jobs:
     - uses: EndBug/add-and-commit@v9
       with:
         default_author: github_actions
-        add: 'public/coverage'
+        add: 'coverage'
         message: 'Add code coverage report'
 
