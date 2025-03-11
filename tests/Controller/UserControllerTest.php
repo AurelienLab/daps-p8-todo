@@ -122,7 +122,7 @@ class UserControllerTest extends WebTestCase
         );
 
         $this->client->submit($form);
-        $this->assertResponseStatusCodeSame(500);
+        $this->assertSelectorTextContains('div.invalid-feedback', 'This value is already used.');
 
     }
 
